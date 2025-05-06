@@ -14,9 +14,9 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         Department::insert([
-            ['name' => 'B.E. Computer'],
-            ['name' => 'B.E. Civil'],
-            ['name' => 'B.E. Electronics, Communication & Automation'],
+            ['name' => 'B.E. Computer', 'color_code' => 'bg-yellow-50', 'text_color' => 'text-yellow-800'],
+            ['name' => 'B.E. Civil', 'color_code' => 'bg-blue-50', 'text_color' => 'text-blue-700'],
+            ['name' => 'B.E. Electronics, Communication & Automation', 'color_code' => 'bg-green-50', 'text_color' => 'text-green-700'],
         ]);
     }
 }

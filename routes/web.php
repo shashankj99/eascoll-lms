@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Students;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,3 +16,5 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('students', Students::class)->name('students')->middleware('auth:sanctum');
