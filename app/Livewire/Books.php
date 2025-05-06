@@ -5,9 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Book;
 use Illuminate\Validation\Rule;
+use Livewire\WithPagination;
+use App\Models\Student;
 
 class Books extends Component
 {
+    use WithPagination;
+
     public $title;
     public $author;
     public $publisher;
@@ -18,11 +22,35 @@ class Books extends Component
     public $confirmingDelete = false;
     public $bookId;
     public $deleteId;
+    public $selectedBooks = [];
+    public $showIssueModal = false;
+    public $studentSearch = '';
+    public $bookSearch = '';
+    public $studentResults = [];
+    public $selectedStudentId = null;
+
+    public function getBooksProperty()
+    {
+        $query = Book::query();
+
+        $searchTerm = trim($this->bookSearch);
+        if (strlen($searchTerm) > 2) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                ->orWhere('author', 'like', "%{$searchTerm}%")
+                ->orWhere('publisher', 'like', "%{$searchTerm}%")
+                ->orWhere('isbn', 'like', "%{$searchTerm}%")
+                ->orWhere('description', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        return $query->orderBy('id', 'desc')->paginate(50);
+    }
 
     public function render()
     {
         return view('livewire.books', [
-            'books' => Book::orderBy('id', 'desc')->paginate(50),
+            'books' => $this->books,
         ]);
     }
 
@@ -120,5 +148,64 @@ class Books extends Component
         Book::find($this->deleteId)->delete();
         session()->flash('message', 'Book Deleted Successfully.');
         $this->cancelDelete();
+    }
+
+    public function openIssueModal()
+    {
+        $this->showIssueModal = true;
+        $this->studentSearch = '';
+    }
+
+    public function closeIssueModal()
+    {
+        $this->showIssueModal = false;
+        $this->studentSearch = '';
+    }
+
+    public function getCanIssueProperty()
+    {
+        return count($this->selectedBooks) > 0;
+    }
+
+    public function updatedStudentSearch()
+    {
+        $search = trim($this->studentSearch);
+        if (strlen($search) > 2) {
+            $this->studentResults = Student::with('department')->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->limit(10)
+                ->get()
+                ->toArray();
+        } else {
+            $this->studentResults = [];
+        }
+    }
+
+    public function selectStudent($studentId)
+    {
+        $this->selectedStudentId = $studentId;
+        $student = Student::find($studentId);
+        $this->studentSearch = $student ? "{$student->name} | {$student->email} | {$student->department->name}" : '';
+        $this->studentResults = [];
+    }
+
+    public function issueBooks()
+    {
+        if (!$this->selectedStudentId || empty($this->selectedBooks)) {
+            session()->flash('message', 'Please select a student and at least one book.');
+            return;
+        }
+
+        $student = Student::find($this->selectedStudentId);
+        if ($student) {
+            \Log::info($this->selectedBooks);
+            session()->flash('message', 'Books issued successfully!');
+        } else {
+            session()->flash('message', 'Student not found.');
+        }
+
+        $this->closeIssueModal();
+        $this->selectedBooks = [];
+        $this->selectedStudentId = null;
     }
 }
