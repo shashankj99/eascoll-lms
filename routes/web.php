@@ -17,9 +17,7 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('students', Students::class)->name('students');
+    Route::get('books', Books::class)->name('books');
+    Route::get('issued-books', IssuedBooks::class)->name('issued-books');
 });
-
-Route::get('students', Students::class)->name('students')->middleware('auth:sanctum');
-Route::get('books', Books::class)->name('books')->middleware('auth:sanctum');
-
-Route::get('/issued-books', IssuedBooks::class)->name('issued-books')->middleware('auth:sanctum');

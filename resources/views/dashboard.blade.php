@@ -5,7 +5,9 @@
         </h2>
     </x-slot>
 
-    <div class="container mx-auto px-4 py-8">
-        <x-welcome />
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <livewire:dashboard />
+        </div>
     </div>
 </x-app-layout>
