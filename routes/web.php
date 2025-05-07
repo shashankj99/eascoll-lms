@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Students;
 use App\Livewire\Books;
+use App\Livewire\IssuedBooks;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,3 +21,5 @@ Route::middleware([
 
 Route::get('students', Students::class)->name('students')->middleware('auth:sanctum');
 Route::get('books', Books::class)->name('books')->middleware('auth:sanctum');
+
+Route::get('/issued-books', IssuedBooks::class)->name('issued-books')->middleware('auth:sanctum');

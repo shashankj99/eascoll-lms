@@ -17,6 +17,7 @@ class Book extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'book_students', 'book_id', 'student_id');
+        return $this->belongsToMany(Student::class, 'book_students', 'book_id', 'student_id')
+            ->withPivot('status', 'borrow_date', 'return_date');
     }
 }
