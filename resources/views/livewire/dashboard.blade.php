@@ -1,16 +1,4 @@
 <div>
-    <!-- Debug Information -->
-    @if(config('app.debug'))
-    <div class="mb-4 p-4 bg-gray-100 rounded">
-        <h4 class="font-bold">Debug Information:</h4>
-        <pre class="text-sm">
-            Monthly Data: {{ json_encode($monthlyBorrowingData, JSON_PRETTY_PRINT) }}
-            Department Data: {{ json_encode($departmentWiseData, JSON_PRETTY_PRINT) }}
-            Publisher Data: {{ json_encode($bookCategoryData, JSON_PRETTY_PRINT) }}
-        </pre>
-    </div>
-    @endif
-
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
         <div class="p-6 bg-white border-b border-gray-200 rounded-lg shadow-sm">
