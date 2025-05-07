@@ -28,6 +28,7 @@ class Books extends Component
     public $bookSearch = '';
     public $studentResults = [];
     public $selectedStudentId = null;
+    public $returnDate;
 
     public function getBooksProperty()
     {
@@ -154,12 +155,14 @@ class Books extends Component
     {
         $this->showIssueModal = true;
         $this->studentSearch = '';
+        $this->returnDate = now()->addDays(14)->format('Y-m-d');
     }
 
     public function closeIssueModal()
     {
         $this->showIssueModal = false;
         $this->studentSearch = '';
+        $this->returnDate = null;
     }
 
     public function getCanIssueProperty()
@@ -196,9 +199,26 @@ class Books extends Component
             return;
         }
 
+        $this->validate([
+            'returnDate' => 'required|date|after:today',
+        ]);
+
         $student = Student::find($this->selectedStudentId);
         if ($student) {
-            \Log::info($this->selectedBooks);
+            $books = Book::whereIn('id', $this->selectedBooks)->get();
+            
+            foreach ($books as $book) {
+                if ($book->quantity <= 0) {
+                    session()->flash('error', "Book '{$book->title}' is out of stock.");
+                    return;
+                }
+                $book->decrement('quantity');
+                $book->students()->attach($student->id, [
+                    'borrow_date' => now()->format('Y-m-d'),
+                    'return_date' => $this->returnDate,
+                    'status' => 'borrowed',
+                ]);
+            }
             session()->flash('message', 'Books issued successfully!');
         } else {
             session()->flash('message', 'Student not found.');
@@ -207,5 +227,6 @@ class Books extends Component
         $this->closeIssueModal();
         $this->selectedBooks = [];
         $this->selectedStudentId = null;
+        $this->returnDate = null;
     }
 }

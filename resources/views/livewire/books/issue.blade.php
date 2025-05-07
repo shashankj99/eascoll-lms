@@ -24,6 +24,17 @@
             <div class="mb-4 text-green-700">
                 Selected Student: {{ $studentSearch }}
             </div>
+            <div class="mb-4">
+                <label for="returnDate" class="block text-sm font-medium text-gray-700 mb-1">Expected Return Date</label>
+                <input 
+                    type="date" 
+                    id="returnDate"
+                    wire:model="returnDate" 
+                    class="w-full border rounded px-3 py-2"
+                    min="{{ date('Y-m-d') }}"
+                >
+                @error('returnDate') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
         @endif
 
         <div class="flex justify-end space-x-2">

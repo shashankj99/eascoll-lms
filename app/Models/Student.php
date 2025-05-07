@@ -19,5 +19,10 @@ class Student extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    public function books()
+    {
+        return $this->belongsToMany(Book::class, 'book_students', 'student_id', 'book_id');
+    }
 }
 
