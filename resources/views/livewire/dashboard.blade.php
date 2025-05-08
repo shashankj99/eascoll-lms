@@ -42,27 +42,27 @@
     <!-- Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Monthly Borrowing Trend -->
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="bg-white p-6 rounded-lg shadow-sm h-[360px]">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Monthly Borrowing Trend</h3>
-            <canvas id="monthlyBorrowingChart" height="300"></canvas>
+            <canvas id="monthlyBorrowingChart"></canvas>
         </div>
 
         <!-- Department-wise Distribution -->
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="bg-white p-6 rounded-lg shadow-sm h-[360px]">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Department-wise Distribution</h3>
-            <canvas id="departmentChart" height="300"></canvas>
+            <canvas id="departmentChart"></canvas>
         </div>
 
         <!-- Top Publishers -->
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="bg-white p-6 rounded-lg shadow-sm h-[360px]">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Publishers</h3>
-            <canvas id="publisherChart" height="300"></canvas>
+            <canvas id="publisherChart"></canvas>
         </div>
 
         <!-- Book Status Distribution -->
-        <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="bg-white p-6 rounded-lg shadow-sm h-[360px]">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Book Status Distribution</h3>
-            <canvas id="statusChart" height="300"></canvas>
+            <canvas id="statusChart"></canvas>
         </div>
     </div>
 </div>
@@ -70,8 +70,6 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('livewire:initialized', function () {
-    // Monthly Borrowing Chart
     new Chart(document.getElementById('monthlyBorrowingChart'), {
         type: 'line',
         data: {
@@ -90,11 +88,10 @@ document.addEventListener('livewire:initialized', function () {
                 legend: {
                     position: 'top',
                 }
-            }
+            },
         }
     });
 
-    // Department-wise Chart
     const departmentData = @json($departmentWiseData);
     new Chart(document.getElementById('departmentChart'), {
         type: 'doughnut',
@@ -122,7 +119,6 @@ document.addEventListener('livewire:initialized', function () {
         }
     });
 
-    // Publisher Chart
     const publisherData = @json($bookCategoryData);
     new Chart(document.getElementById('publisherChart'), {
         type: 'bar',
@@ -144,7 +140,6 @@ document.addEventListener('livewire:initialized', function () {
         }
     });
 
-    // Status Distribution Chart
     new Chart(document.getElementById('statusChart'), {
         type: 'pie',
         data: {
@@ -163,6 +158,5 @@ document.addEventListener('livewire:initialized', function () {
             }
         }
     });
-});
 </script>
 @endpush

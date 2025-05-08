@@ -57,22 +57,31 @@ class Dashboard extends Component
     public function getMonthlyBorrowingDataProperty()
     {
         $currentYear = now()->year;
+
+        // Fetch the records for the current year
         $data = DB::table('book_students')
-            ->select(DB::raw('strftime("%m", borrow_date) as month'), DB::raw('COUNT(*) as count'))
-            ->whereRaw('strftime("%Y", borrow_date) = ?', [$currentYear])
-            ->groupBy('month')
-            ->orderBy('month')
+            ->whereYear('borrow_date', $currentYear)  // Filter by current year
             ->get();
 
+        // Initialize months (1 to 12) for the labels and counts
         $months = collect(range(1, 12))->map(function ($month) {
-            return Carbon::create()->month($month)->format('M');
+            return Carbon::create()->month($month)->format('M');  // Short month name (e.g., Jan, Feb, etc.)
         });
 
+        // Count the occurrences of each month
         $counts = $months->map(function ($month, $index) use ($data) {
+            // Format the month to match the two-digit format (e.g., '01' for January)
             $monthNumber = str_pad($index + 1, 2, '0', STR_PAD_LEFT);
-            return $data->firstWhere('month', $monthNumber)?->count ?? 0;
+
+            // Count how many times this month occurs in the data
+            $monthCount = $data->filter(function ($item) use ($monthNumber) {
+                return Carbon::parse($item->borrow_date)->format('m') === $monthNumber;
+            })->count();
+
+            return $monthCount;
         });
 
+        // Return the results in the format requested
         return [
             'labels' => $months->values(),
             'data' => $counts->values(),
