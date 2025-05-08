@@ -37,6 +37,8 @@
             </div>
         @endif
 
+        @if (session()->has('error')) <span class="text-red-500 text-sm">{{ session('error') }}</span> @endif
+
         <div class="flex justify-end space-x-2">
             <button wire:click="closeIssueModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Close</button>
             <button 

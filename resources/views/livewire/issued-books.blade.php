@@ -41,6 +41,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrow Date</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Date</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -76,6 +77,16 @@
                                         {{ $student->pivot->status === 'borrowed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
                                         {{ ucfirst($student->pivot->status) }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    @if($student->pivot->status === 'borrowed')
+                                        <button 
+                                            wire:click="returnBook({{ $book->id }}, {{ $student->id }})"
+                                            class="text-indigo-600 hover:text-indigo-900"
+                                        >
+                                            Return Book
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

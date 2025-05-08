@@ -208,6 +208,16 @@ class Books extends Component
             $books = Book::whereIn('id', $this->selectedBooks)->get();
             
             foreach ($books as $book) {
+                $isAlreadyBorrowed = $book->students()
+                    ->wherePivot('student_id', $student->id)
+                    ->wherePivot('status', 'borrowed')
+                    ->exists();
+
+                if ($isAlreadyBorrowed) {
+                    session()->flash('error', "Student already has '{$book->title}' borrowed.");
+                    return;
+                }
+
                 if ($book->quantity <= 0) {
                     session()->flash('error', "Book '{$book->title}' is out of stock.");
                     return;
